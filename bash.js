@@ -1,27 +1,29 @@
-function prompt(data){
-  console.log(data)
-  process.stdout.write('prompt > ');
-}
-
 const pwd = require('./pwd');
 const cat = require('./cat');
+const curl = require('./curl');
+const ls = require('./ls');
 
-function main (data) {
+const done = (output) => {
+  console.log(output);
+  process.stdout.write('\nprompt > ');
+};
+
+function main(data) {
   const cmd = data.toString().trim();
   //change to switch?
   if (cmd === 'pwd') {
-    process.stdout.write(pwd.cwd);
-    process.stdout.write('\nprompt > ');
+    pwd(done);
   } else if (cmd === 'ls') {
-    console.log('hi')
-    require('./ls')(prompt)
+    ls(done);
   } else if (cmd.slice(0, 3) === 'cat') {
-    file = cmd.split(' ')[1]
-    process.stdout.write(cat(file))
+    file = cmd.split(' ')[1];
+    cat(file, done);
+  } else if (cmd.slice(0, 4) === 'curl') {
+    file = cmd.split(' ')[1];
+    curl(file, done);
   } else {
-    process.stdout.write('You typed: ' + cmd);
-    process.stdout.write('\nprompt > ');
+    done('You typed: ' + cmd);
   }
-};
-prompt('welcome')
+}
+done('welcome');
 process.stdin.on('data', main);
